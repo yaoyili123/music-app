@@ -49,7 +49,7 @@
       </div>
     </div>
     
-    <div class="register" v-show="formType == 'login'">
+    <div class="login" v-show="formType == 'login'">
       <van-cell-group>
         <van-field
           v-model="loginUn"
@@ -83,6 +83,43 @@
         </div>
       </van-cell-group>
     </div>
+
+    <div class="updateSheet" v-show="formType == 'updateSheet'">
+      <van-cell-group>
+        <van-field
+          v-model="sheet.name"
+          required
+          clearable
+          label="歌单名称"
+          placeholder="歌单名称"
+        />
+
+        <van-field
+          v-model="sheet.description"
+          rows="2"
+          autosize
+          label="歌单描述"
+          placeholder="请输入描述"
+        />
+      </van-cell-group>
+       <van-uploader 
+        v-model="fileList"
+        multiple
+        :max-count="1"
+        :after-read="afterRead"
+      />
+      <div class="form-button">
+        <van-button 
+          type="info" 
+          size="large"
+          style="width:50%"
+          @click="updateSheet"
+          >
+          修改
+        </van-button>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -91,6 +128,7 @@ import Api from 'src/api.js'
 import { mapGetters, mapMutations, mapActions } from 'vuex'
 
 export default {
+
   data() {
     return {
       formType: '',
@@ -101,16 +139,30 @@ export default {
       fileList: [],
       loginUn: '',
       loginPw: '',
+      sheet: {}
     }
   },
 
   created() {
     this.formType = this.$route.params.type
+    if (this.formType == 'updateSheet') {
+      let sid = this.$route.params.sid
+      Api.getSheet(sid).then(function (response) {
+        console.log(response);
+        if (response.data.code) {
+          this.$toast.fail(response.data.msg);
+          return
+        }
+        this.sheet = response.data.data
+        this.fileList.push({'url' : this.sheet.picUrl})
+      }.bind(this)).catch(Api.onError.bind(this))
+    }
   },
 
   methods: {
     ...mapMutations({
       setCurUser: 'setCurUser',
+      setUpdateSheet: 'setUpdateSheet',
     }),
 
     onBack: function() {
@@ -157,6 +209,14 @@ export default {
       return true
     },
 
+    checkSheet: function() {
+      if (this.sheet.name == '') {
+        this.$toast.fail('歌单名不能为空')
+        return false
+      }
+      return true
+    },
+
     register: function() {
       if (!this.checkRegister()) return
 
@@ -195,8 +255,31 @@ export default {
           return
         }
         var curUser = response.data.data
-        this.$toast.success('登陆成功');
+        this.$toast.success('登陆成功')
         this.setCurUser(curUser)
+        this.$router.go(-1)
+      }.bind(this)).catch(Api.onError.bind(this))
+    },
+
+    updateSheet: function() {
+      if (!this.checkSheet()) return
+
+      var formData = new FormData()
+      formData.append('id', this.sheet.id)
+      formData.append('name', this.sheet.name)
+      formData.append('description', this.sheet.description)
+
+      if (this.pic !== undefined)
+        formData.append('pic', this.pic)
+    
+      Api.updateSheet(formData).then(function (response) {
+        console.log(response);
+        if (response.data.code) {
+          this.$toast.fail(response.data.msg);
+          return
+        }
+        this.$toast.success('修改成功')
+        this.setUpdateSheet(true)
         this.$router.go(-1)
       }.bind(this)).catch(Api.onError.bind(this))
     }
@@ -209,6 +292,7 @@ export default {
       let m = {
         'register': '注册新用户',
         'login': '登陆',
+        'updateSheet': '修改歌单信息',
       }
       return m[this.formType]
     }
@@ -218,9 +302,13 @@ export default {
 
 <style>
 .userform {
+  position: absolute;
+  top: 0;
+  left: 0;
   background-color: white;
   width: 100%;
   height: 100%;
+  z-index: 1;
 }
 
 .form-button {

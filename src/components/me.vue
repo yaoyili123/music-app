@@ -36,7 +36,7 @@
                   radius="3"
                   width="2.5rem"
                   height="2.5rem"
-                  :src="sheet.picurl"
+                  :src="sheet.picUrl"
                 />
               </template>
               <van-icon
@@ -92,7 +92,14 @@ export default {
     };
   },
 
+  // befo (to, from, next) {
+  //   console.log('beforeRouteLeave()')
+  // },
+
   methods: {
+    ...mapMutations({
+      setUpdateSheet: 'setUpdateSheet',
+    }),
     addSheet: function() {
       if (this.sheetName == '') {
         this.$toast.fail('歌单名不能为空')
@@ -119,6 +126,17 @@ export default {
       this.$router.push('/userform/login')
     },
 
+    fetchSheets: function() {
+      Api.getSheets(this.curUser.id).then(function (response) {
+        console.log(response);
+        if (response.data.code) {
+          this.$toast.fail(response.data.msg);
+          return
+        }
+        this.sheetList = response.data.data
+      }.bind(this)).catch(Api.onError.bind(this))
+    },
+
     onLoad: function(loading, finished) {
       console.log('onLoad()')
     },
@@ -126,46 +144,44 @@ export default {
     onSelect(item) {
       // 默认情况下，点击选项时不会自动关闭菜单
       // 可以通过 close-on-click-action 属性开启自动关闭
-      this.$toast(this.selectId);
-    }
-  },
-
-  created() {
-    if (this.isLogined) {
-      Api.getSheets(this.curUser.id).then(function (response) {
+      // this.$toast(this.selectSheet);
+      if (item.name == '编辑歌单')
+        this.$router.push('/userform/updateSheet/' + this.selectId)
+      else {
+        Api.deleteSheet(this.selectId).then(function (response) {
         console.log(response);
         if (response.data.code) {
           this.$toast.fail(response.data.msg);
           return
         }
-        this.sheetList.push(...response.data.data)
+        this.$toast.success('删除成功')
+        this.setUpdateSheet(true)
       }.bind(this)).catch(Api.onError.bind(this))
+      }
     }
   },
 
-  computed: {
-    ...mapGetters(['curUser', 'isLogined']),
+  created() {
+    if (this.isLogined)
+      this.fetchSheets()
+  },
 
-    sheetList: function() {
-      if (this.isLogined) {
-        Api.getSheets(this.curUser.id)
-      }
-      else 
-        return []
-    },
+  computed: {
+    ...mapGetters(['curUser', 'isLogined', 'updateSheet']),
   },
 
   watch: {
     isLogined(newVal, oldVal) {
       if (oldVal != newVal && newVal == true) {
-        Api.getSheets(this.curUser.id).then(function (response) {
-        console.log(response);
-        if (response.data.code) {
-          this.$toast.fail(response.data.msg);
-          return
-        }
-        this.sheetList.push(...response.data.data)
-      }.bind(this)).catch(Api.onError.bind(this))
+        this.fetchSheets()
+      }
+    },
+    
+    updateSheet(newVal, oldVal) {
+      console.log('watch updateSheet()')
+      if (oldVal != newVal && newVal == true) {
+        this.fetchSheets()
+        this.setUpdateSheet(false)
       }
     }
   }

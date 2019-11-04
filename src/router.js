@@ -9,7 +9,7 @@ Vue.use(VueRouter)
 const routes = [
   { path: '/artist/:id', name:'artist',  component: Artist },
   { path: '/album/:id', name:'album',  component: Album },
-  { path: '/userform/:type', name:'userform',  component: UserForm },
+  { path: '/userform/:type/:sid', name:'userform',  component: UserForm},
 ]
 
 export default new VueRouter({

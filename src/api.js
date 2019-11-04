@@ -29,6 +29,16 @@ function getSheets(uid) {
     return axios.get(url)
 }
 
+function getSheet(sid) {
+    let url = HOST_NAME + '/sheet/' + sid
+    return axios.get(url)
+}
+
+function updateSheet(data) {
+    let url = HOST_NAME + '/updateSheet'
+    return axios.post(url, data)
+}
+
 function getAlbumsbyArtist(aid) {
     let url = HOST_NAME + '/albums/' + aid
     return axios.get(url)
@@ -42,6 +52,11 @@ function register(user) {
 function login(user) {
     let url = HOST_NAME + '/login'
     return axios.post(url, user)
+}
+
+function deleteSheet(sid) {
+    let url = HOST_NAME + '/deleteSheet/' + sid
+    return axios.get(url)
 }
 
 function addSheet(data) {
@@ -61,8 +76,11 @@ export default {
     albumDetail,
     getSongs,
     getSheets,
+    getSheet,
     getAlbumsbyArtist,
     register,
+    updateSheet,
+    deleteSheet,
     onError,
     login,
     addSheet

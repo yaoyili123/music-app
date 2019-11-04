@@ -96,20 +96,32 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+/* FIXME: body, html都要设置成100%, 才能适应屏幕 */
+body, html{
+  overflow-x: hidden;
+  overflow-y: scroll;
+  /* overflow: hidden; */
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
 
 #app {
   width: 100%;
   height: 100%;
-  position: fixed;
-  top: 0;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  /* position: fixed;
+  top: 0; */
 }
 
 .main {
-  position: fixed;
-  top: 0;
+  /* position: fixed;
+  top: 0; */
   width: 100%;
-  z-index: -1;
+  /* z-index: -1; */
 }
 
 .user-info{
