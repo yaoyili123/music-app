@@ -4,7 +4,7 @@
       :title="artist.name"
       left-text="返回"
       left-arrow
-      @click-left="onBack"
+      @click-left="$router.go(-1)"
     />
     <van-image
       :src="artist.picurl"
@@ -12,22 +12,7 @@
 
     <van-tabs>
       <van-tab title="歌曲">
-        <van-list
-          v-if="songList.length > 0"
-          v-model="songLoading"
-          :finished="songFinished"
-          error-text="加载失败"
-          finished-text="没有更多了"
-          immediate-check
-        >
-          <van-cell 
-            :key="song.id" 
-            :title-style="song.mUrl? '': 'color: #D3D3D3'"
-            v-for="song in songList" 
-            :title="song.name" 
-            @click="setCurSong(song)"
-            />
-        </van-list>
+        <songList titleType ref="songs"></songList>
       </van-tab>
       <van-tab title="专辑">
         <van-list
@@ -62,17 +47,18 @@
 
 <script>
 import Api from 'src/api.js'
-import { mapGetters, mapMutations, mapActions } from 'vuex'
+import SongList from './songList'
 
 export default {
+  components: {
+    SongList,
+  },
+
   data() {
     return {
       isLoaded: false,
       artistId: 0,
-      artist: {},
-      songList: [],
-      songLoading: false,
-      songFinished: true,    
+      artist: {},   
       albumList: [],
       albumLoading: false,
       albumFinished: true, 
@@ -113,7 +99,7 @@ export default {
           })
           return
         }
-        this.songList = res.data.data
+        this.$refs.songs.songList = res.data.data
       }.bind(this)).catch(Api.onError.bind(this))
 
       Api.getAlbumsbyArtist(this.artistId)
@@ -134,14 +120,6 @@ export default {
       }.bind(this)).catch(Api.onError.bind(this))
   },
   methods: {
-    ...mapMutations({
-      setCurSong: 'setCurSong',
-    }),
-
-    onBack: function() {
-      this.$router.go(-1)
-    },
-
     toOther: function(path) {
       this.$router.push(path)
     }

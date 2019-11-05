@@ -12,7 +12,7 @@
       :key="song.id" 
       :title-style="song.mUrl? '': 'color: #D3D3D3'"
       v-for="song in songList" 
-      :title="song.name" 
+      :title="titleType? song.name : song.name + '-' + song.author" 
       @click="setCurSong(song)"
       />
   </van-list>
@@ -20,7 +20,12 @@
 </template>
 
 <script>
+import { mapGetters, mapMutations, mapActions } from 'vuex'
+
 export default {
+  props: {
+    titleType: Boolean
+  },
 
   data() {
     return {

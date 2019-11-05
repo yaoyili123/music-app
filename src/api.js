@@ -70,6 +70,9 @@ function onError(err) {
     this.$notify({ type: 'danger', message: '系统出错' });
 }
 
+/* 统一处理逻辑错误 */
+
+
 export default {
     findMusic,
     artistDetail,

@@ -92,10 +92,6 @@ export default {
     };
   },
 
-  // befo (to, from, next) {
-  //   console.log('beforeRouteLeave()')
-  // },
-
   methods: {
     ...mapMutations({
       setUpdateSheet: 'setUpdateSheet',

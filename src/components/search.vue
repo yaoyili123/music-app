@@ -19,26 +19,9 @@
     </div>
 
     <div class="result-list">
-      <van-tabs v-model="active" v-if="isResult">
+      <van-tabs v-model="active" v-show="isResult">
         <van-tab title="歌曲">
-          <van-list
-            v-if="songList.length > 0"
-            v-model="songLoading"
-            :finished="songFinished"
-            error-text="加载失败"
-            finished-text="没有更多了"
-            @load="onLoad(songLoading, songFinished)"
-            immediate-check
-          >
-            <van-cell 
-              :title-style="song.mUrl? '': 'color: #D3D3D3'"
-              :key="song.id" 
-              v-for="song in songList" 
-              :title="song.name + '-' + song.author"
-              clickable
-              @click="setCurSong(song)"
-               />
-          </van-list>
+          <songList ref="song"></songList>
         </van-tab>
 
         <van-tab title="歌手">
@@ -134,18 +117,19 @@
 
 <script >
 import Api from 'src/api.js'
-import { mapGetters, mapMutations, mapActions } from 'vuex'
+import SongList from './songList'
 
 export default {
+  components: {
+    SongList,
+  },
+
   data() {
     return {
       searchKey: '',
       searchHistory: [],
       active: 0,
       isResult: false,
-      songList: [],
-      songLoading: false,
-      songFinished: true,
       artistList: [],
       artistLoading: false,
       artistFinished: true,
@@ -159,10 +143,6 @@ export default {
   },
 
   methods: {
-    ...mapMutations({
-      setCurSong: 'setCurSong',
-    }),
-
     selectHistory: function(kw) {  
       // console.log(this)
       this.$data.searchKey = kw
@@ -173,17 +153,21 @@ export default {
         this.searchHistory.push(this.searchKey)
       // console.log('onSearch()')
       localStorage.searchHistory = JSON.stringify(this.searchHistory)
-
-      if (this.isResult) {
-        this.songList = []
-        this.artistList = []
-        this.sheetList = []
-        this.albumList = []
-        console.log('clean Lists')
-      }
         
       Api.findMusic(this.searchKey, -1)
-      .then(this.onSuccessSearch).catch(Api.onError.bind(this))
+      .then(function(res){
+        console.log(res)
+        if (res.data.code != 0) {
+          this.$toast.fail(res.data.msg);
+          return
+        }
+        var resData = res.data.data
+        this.$refs.song.songList = resData.songs
+        this.artistList = resData.artists
+        this.sheetList = resData.sheets
+        this.albumList = resData.albums
+        this.isResult = true
+      }.bind(this)).catch(Api.onError.bind(this))
     },
 
     tagClose: function(kw) {
@@ -191,16 +175,6 @@ export default {
       let idx = this.searchHistory.indexOf(kw)
       if (idx != -1)
         this.searchHistory.splice(idx, 1)
-    },
-
-    onSuccessSearch: function(res) {
-      console.log(res)
-      let resData = res.data.data
-      this.songList.push(...resData.songs)
-      this.artistList.push(...resData.artists)
-      this.sheetList.push(...resData.sheets)
-      this.albumList.push(...resData.albums)
-      this.isResult = true
     },
 
     onLoad: function(loading, finished) {
