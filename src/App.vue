@@ -1,7 +1,6 @@
 <template>
   <div id="app">
     <div class="main">
-
       <van-popup 
         v-model="userShow"
         position="left"
@@ -17,11 +16,14 @@
             />
             <p>{{userName}}</p>
           </div>
+          <div class="buttons">
+            <van-button @click="logOut" icon="clear" type="info">退出</van-button>
+          </div>
         </div>
       </van-popup>
 
       <van-nav-bar title="姚依理的APP">
-        <van-icon name="user-o" slot="left" size="20" @click="showUserPanel"/>
+        <van-icon name="user-o" slot="left" size="20" @click="userShow = true"/>
       </van-nav-bar>
       <van-tabs v-model="active">
         <van-tab title="推荐">
@@ -58,6 +60,7 @@ export default {
     Play,
     Me,
   },
+
   data() {
     return {
       active: 0,
@@ -69,17 +72,27 @@ export default {
     }
   },
   methods: {
-    showUserPanel() {
-      this.userShow = true
-    },
+    ...mapMutations({
+      deleteUser: 'deleteUser',
+    }),
 
     userDetail() {
       if (this.isLogined) {
-
+        
       }
       else {
-        this.$router.push('userform/login')
+        this.$router.push('/userform/login')
+        this.userShow = false
       }
+    },
+
+    logOut() {
+      if(!this.isLogined) {
+        this.$toast.fail('还未登陆')
+        return
+      }
+      this.deleteUser()
+      this.$toast.success('注销成功')
     }
   },
   computed: {
@@ -101,7 +114,6 @@ export default {
 body, html{
   overflow-x: hidden;
   overflow-y: scroll;
-  /* overflow: hidden; */
   width: 100%;
   height: 100%;
   padding: 0;
@@ -111,17 +123,10 @@ body, html{
 #app {
   width: 100%;
   height: 100%;
-  overflow-x: hidden;
-  overflow-y: scroll;
-  /* position: fixed;
-  top: 0; */
 }
 
 .main {
-  /* position: fixed;
-  top: 0; */
   width: 100%;
-  /* z-index: -1; */
 }
 
 .user-info{
@@ -134,5 +139,19 @@ body, html{
   height: 20%;
   text-align:center;
   padding-top:10%;
+}
+
+.buttons{
+  text-align:center;
+}
+
+.data-detail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: white;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
 }
 </style>

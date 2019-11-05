@@ -30,7 +30,9 @@
               v-for="sheet in sheetList" 
               :title="sheet.name"
               :label="sheet.songNum + '首'"
-              size="large">
+              size="large"
+              @click="setOwn(true); $router.push('/sheet/' + sheet.id)"
+              >
               <template slot="icon">
                 <van-image
                   radius="3"
@@ -44,7 +46,7 @@
                 name="bars"
                 size="1.5em"
                 style="line-height: inherit;"
-                @click="asShow = true; selectId = sheet.id"
+                @click.stop="asShow = true; selectId = sheet.id"
               />
             </van-cell>
           </van-list>
@@ -95,6 +97,7 @@ export default {
   methods: {
     ...mapMutations({
       setUpdateSheet: 'setUpdateSheet',
+      setOwn: 'setOwn',
     }),
     addSheet: function() {
       if (this.sheetName == '') {
@@ -142,7 +145,7 @@ export default {
       // 可以通过 close-on-click-action 属性开启自动关闭
       // this.$toast(this.selectSheet);
       if (item.name == '编辑歌单')
-        this.$router.push('/userform/updateSheet/' + this.selectId)
+        this.$router.push('/updateSheet/' + this.selectId)
       else {
         Api.deleteSheet(this.selectId).then(function (response) {
         console.log(response);

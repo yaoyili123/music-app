@@ -19,8 +19,8 @@ function albumDetail(id) {
     return axios.get(url)
 }
 
-function getSongs(aid, type) {
-    let url = HOST_NAME + '/songs/' + aid + "?type=" + type
+function getSongs(id, type) {
+    let url = HOST_NAME + '/songs/' + id + "?type=" + type
     return axios.get(url)
 }
 
@@ -64,6 +64,16 @@ function addSheet(data) {
     return axios.post(url, data)
 }
 
+function addSongToSheet(data) {
+    let url = HOST_NAME + '/song/addsheet'
+    return axios.post(url, data)
+}
+
+function deleteSongFromSheet(data) {
+    let url = HOST_NAME + '/song/delsheet'
+    return axios.post(url, data)
+}
+
 /* 统一处理API错误 */
 function onError(err) {
     console.log(err);
@@ -86,5 +96,7 @@ export default {
     deleteSheet,
     onError,
     login,
-    addSheet
+    addSheet,
+    addSongToSheet,
+    deleteSongFromSheet,
 }

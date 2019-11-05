@@ -1,5 +1,5 @@
 <template>
-  <div class="artist-detail" v-if="isLoaded">
+  <div class="data-detail" v-if="isLoaded">
     <van-nav-bar
       :title="artist.name"
       left-text="返回"
@@ -7,7 +7,7 @@
       @click-left="$router.go(-1)"
     />
     <van-image
-      :src="artist.picurl"
+      :src="artist.picUrl"
     />
 
     <van-tabs>
@@ -28,14 +28,14 @@
               v-for="album in albumList" 
               :title="album.name"
               :label="album.author"
-              @click="toOther('/album/' + album.id)"
+              @click="$router.push('/album/' + album.id)"
               size="large">
               <template slot="icon">
                 <van-image
                   radius="3"
                   width="2.5rem"
                   height="2.5rem"
-                  :src="album.picurl"
+                  :src="album.picUrl"
                 />
               </template>
             </van-cell>
@@ -89,14 +89,8 @@ export default {
       Api.getSongs(this.artistId, 'artist')
       .then(function(res){
         console.log(res)
-        // console.log(this)
         if (res.data.code != 0) {
-          this.$dialog.alert({
-            title: '提示',
-            message: res.data.msg
-          }).then(() => {
-            this.$router.go(-1)
-          })
+          this.$toast.fail(res.data.msg)
           return
         }
         this.$refs.songs.songList = res.data.data
@@ -105,36 +99,17 @@ export default {
       Api.getAlbumsbyArtist(this.artistId)
       .then(function(res){
         console.log(res)
-        // console.log(this)
         if (res.data.code != 0) {
-          this.$dialog.alert({
-            title: '提示',
-            message: res.data.msg
-          }).then(() => {
-            this.$router.go(-1)
-          })
+          this.$toast.fail(res.data.msg)
           return
         }
         this.albumList = res.data.data
         this.isLoaded = true
       }.bind(this)).catch(Api.onError.bind(this))
   },
-  methods: {
-    toOther: function(path) {
-      this.$router.push(path)
-    }
-  }
 }
 </script>
 
 <style scoped>
-.artist-detail {
-  position: absolute;
-  top: 0;
-  left: 0;
-  background-color: white;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-}
+
 </style>

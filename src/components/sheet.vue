@@ -1,15 +1,17 @@
 <template>
   <div class="data-detail" v-if="isLoaded">
     <van-nav-bar
-      :title="album.name"
+      :title="sheet.name"
       left-text="返回"
       left-arrow
       @click-left="$router.go(-1)"
     />
-    <van-image
-      :src="album.picUrl"
+    <div style="width: 100%; text-align:center">
+      <van-image
+      :src="sheet.picUrl"
     />
-    <van-cell title="全部歌曲" size="large"/>
+    </div>
+    <van-cell title="歌曲列表" size="large"/>
     <songList titleType ref="songs"></songList>
   </div>
 </template>
@@ -26,36 +28,36 @@ export default {
   data() {
     return {
       isLoaded: false,
-      albumId: 0,
-      album: {}, 
+      sheetId: -1,
+      sheet: {},  
     }
   },
 
   created: function(){
-    this.albumId = this.$route.params.id
-     Api.albumDetail(this.albumId)
+    this.sheetId = this.$route.params.id
+      Api.getSheet(this.sheetId)
       .then(function(res){
-        console.log(res)
-        // console.log(this)
+        // console.log(res)
         if (res.data.code != 0) {
-          this.$toast.fail(response.data.msg)
+          this.$toast.fail(res.data.msg)
           return
         }
-        this.album = res.data.data
+        this.sheet = res.data.data
         this.isLoaded = true
       }.bind(this)).catch(Api.onError.bind(this))
 
-      Api.getSongs(this.albumId, 'album')
+      Api.getSongs(this.sheetId, 'sheet')
       .then(function(res){
-        console.log(res)
-        // console.log(this)
+        // console.log(res)
         if (res.data.code != 0) {
-          this.$toast.fail(response.data.msg)
+          this.$toast.fail(res.data.msg)
           return
         }
+        console.log("getSongs: ")
+        // console.log(this.$refs)
         this.$refs.songs.songList = res.data.data
+        this.$refs.songs.sheetId = this.sheetId
       }.bind(this)).catch(Api.onError.bind(this))
-      
   },
 }
 </script>

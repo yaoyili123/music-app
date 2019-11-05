@@ -19,6 +19,7 @@
     </div>
 
     <div class="result-list">
+      <!-- FIXME: v-if会导致没有加载，从而ref获取不了，因此使用v-show -->
       <van-tabs v-model="active" v-show="isResult">
         <van-tab title="歌曲">
           <songList ref="song"></songList>
@@ -38,14 +39,14 @@
               :key="artist.id" 
               v-for="artist in artistList" 
               :title="artist.name"
-              @click="toOther('/artist/' + artist.id)"
+              @click="$router.push('/artist/' + artist.id)"
               size="large">
               <template slot="icon">
                 <van-image
                   round
                   width="2.5rem"
                   height="2.5rem"
-                  :src="artist.picurl"
+                  :src="artist.picUrl"
                 />
               </template>
             </van-cell>
@@ -67,14 +68,14 @@
               v-for="album in albumList" 
               :title="album.name"
               :label="album.author"
-              @click="toOther('/album/' + album.id)"
+              @click="$router.push('/album/' + album.id)"
               size="large">
               <template slot="icon">
                 <van-image
                   radius="3"
                   width="2.5rem"
                   height="2.5rem"
-                  :src="album.picurl"
+                  :src="album.picUrl"
                 />
               </template>
             </van-cell>
@@ -96,20 +97,19 @@
               v-for="sheet in sheetList" 
               :title="sheet.name"
               :label="sheet.username"
-
+              @click="setOwn(false); $router.push('/sheet/' + sheet.id)"
               size="large">
               <template slot="icon">
                 <van-image
                   radius="3"
                   width="2.5rem"
                   height="2.5rem"
-                  :src="sheet.picurl"
+                  :src="sheet.picUrl"
                 />
               </template>
             </van-cell>
           </van-list>
         </van-tab>
-
       </van-tabs>
     </div>
   </div>
@@ -118,6 +118,7 @@
 <script >
 import Api from 'src/api.js'
 import SongList from './songList'
+import { mapGetters, mapMutations, mapActions } from 'vuex'
 
 export default {
   components: {
@@ -143,6 +144,10 @@ export default {
   },
 
   methods: {
+    ...mapMutations({
+      setOwn: 'setOwn',
+    }),
+
     selectHistory: function(kw) {  
       // console.log(this)
       this.$data.searchKey = kw
@@ -180,10 +185,6 @@ export default {
     onLoad: function(loading, finished) {
       console.log('onLoad()')
     },
-
-    toOther: function(path) {
-      this.$router.push(path)
-    }
   },
 
   created: function() {
