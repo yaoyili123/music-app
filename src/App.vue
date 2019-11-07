@@ -22,7 +22,7 @@
         </div>
       </van-popup>
 
-      <van-nav-bar title="姚依理的APP">
+      <van-nav-bar title="MUSIC-APP">
         <van-icon name="user-o" slot="left" size="20" @click="userShow = true"/>
       </van-nav-bar>
       <van-tabs v-model="active">
