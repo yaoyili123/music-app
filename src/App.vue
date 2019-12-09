@@ -38,7 +38,7 @@
       </van-tabs>
     </div>
     <!-- FIXME:放最下面就可以把上面全部遮住 -->
-    <transition name="page-slide">
+    <transition name="play-slide">
       <router-view></router-view>
     </transition>
 
@@ -110,7 +110,7 @@ export default {
 </script>
 
 <style>
-/* FIXME: body, html都要设置成100%, 才能适应屏幕 */
+/* FIXME: body, html都要设置成100%, 才能自适应屏幕 */
 body, html{
   overflow-x: hidden;
   overflow-y: scroll;

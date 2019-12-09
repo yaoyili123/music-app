@@ -4,6 +4,7 @@ export default {
   state: {
     curUser: localStorage.curUser? JSON.parse(localStorage.curUser) : undefined,
     updateSheet: false,
+    //判断是否是自己的歌单
     own: false,
   },
   mutations: {

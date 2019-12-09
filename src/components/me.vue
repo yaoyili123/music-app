@@ -147,15 +147,24 @@ export default {
       if (item.name == '编辑歌单')
         this.$router.push('/updateSheet/' + this.selectId)
       else {
-        Api.deleteSheet(this.selectId).then(function (response) {
-        console.log(response);
-        if (response.data.code) {
-          this.$toast.fail(response.data.msg);
-          return
-        }
-        this.$toast.success('删除成功')
-        this.setUpdateSheet(true)
-      }.bind(this)).catch(Api.onError.bind(this))
+        this.$dialog.confirm({
+          title: '确认',
+          message: '确认删除吗?'
+        }).then(() => {
+          Api.deleteSheet(this.selectId).then(function (response) {
+            console.log(response);
+            if (response.data.code) {
+              this.$toast.fail(response.data.msg);
+              return
+            }
+            this.$toast.success('删除成功')
+            this.setUpdateSheet(true)
+          }.bind(this)).catch(Api.onError.bind(this))
+
+        }).catch(() => {
+          // on cancel
+        });
+        
       }
     }
   },

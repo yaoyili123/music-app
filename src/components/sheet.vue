@@ -33,7 +33,7 @@ export default {
     }
   },
 
-  created: function(){
+  mounted: function(){
     this.sheetId = this.$route.params.id
       Api.getSheet(this.sheetId)
       .then(function(res){

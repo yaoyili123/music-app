@@ -109,26 +109,34 @@ export default {
       }
         
       if (item.name == '从歌单中删除') {
-        var formData = new FormData()
-        formData.append('songId', this.songId)
-        formData.append('sheetId', this.sheetId)
+        this.$dialog.confirm({
+          title: '确认',
+          message: '确认删除吗?'
+        }).then(() => {
+          var formData = new FormData()
+          formData.append('songId', this.songId)
+          formData.append('sheetId', this.sheetId)
 
-        Api.deleteSongFromSheet(formData).then(function (response) {
-          console.log(response);
-          if (response.data.code) {
-            this.$toast.fail(response.data.msg);
-            return
-          }
-          this.$toast.success('删除成功')
-          for (let i = 0; i < this.songList.length; i++) {
-            if (this.songList[i].id == this.songId) {
-              this.songList.splice(i, 1)
-              break
+          Api.deleteSongFromSheet(formData).then(function (response) {
+            console.log(response);
+            if (response.data.code) {
+              this.$toast.fail(response.data.msg);
+              return
             }
-          }
-          this.setUpdateSheet(true)
-          this.dialogShow = false
-        }.bind(this)).catch(Api.onError.bind(this))
+            this.$toast.success('删除成功')
+            for (let i = 0; i < this.songList.length; i++) {
+              if (this.songList[i].id == this.songId) {
+                this.songList.splice(i, 1)
+                break
+              }
+            }
+            this.setUpdateSheet(true)
+            this.dialogShow = false
+          }.bind(this)).catch(Api.onError.bind(this))
+        }).catch(() => {
+          // on cancel
+        });
+        
       }
     },
 

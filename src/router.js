@@ -4,7 +4,7 @@ import Artist from './components/artist'
 import Album from './components/album'
 import Sheet from './components/sheet'
 import UserForm from './components/userform'
-import UpdateSheet from './components/updateSheet.vue'
+import UpdateSheet from './components/updateSheet'
 
 Vue.use(VueRouter)
 
