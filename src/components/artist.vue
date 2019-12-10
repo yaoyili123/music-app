@@ -65,7 +65,7 @@ export default {
     }
   },
 
-  created: function(){
+  mounted: function(){
     this.artistId = this.$route.params.id
     //FIXME: Promis的then函数注意要绑定vue组件（当前this引用）
 

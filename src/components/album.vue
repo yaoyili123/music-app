@@ -31,7 +31,7 @@ export default {
     }
   },
 
-  created: function(){
+  mounted: function(){
     this.albumId = this.$route.params.id
      Api.albumDetail(this.albumId)
       .then(function(res){

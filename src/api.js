@@ -74,6 +74,11 @@ function deleteSongFromSheet(data) {
     return axios.post(url, data)
 }
 
+function findLyric(id) {
+    let url = HOST_NAME + '/lyric/' + id
+    return axios.get(url)
+}
+
 /* 统一处理API错误 */
 function onError(err) {
     console.log(err);
@@ -99,4 +104,5 @@ export default {
     addSheet,
     addSongToSheet,
     deleteSongFromSheet,
+    findLyric,
 }

@@ -17,7 +17,9 @@ export default {
       author: "ラムジ"
     },
     //当前播放状态
-    playing: false
+    playing: false,
+    currentTime: 0,
+    duration: 0,
   },
   mutations: {
     setPlayingState(state, flag) {
@@ -25,10 +27,20 @@ export default {
     },
     setCurSong(state, data) {
       state.curSong = data
-    }
+    },
+    setCurrentTime(state, data) {
+      state.currentTime = data
+    },
+    setDuration(state, data) {
+      state.duration = data
+    },
   },
   getters: {
     playing: state => state.playing,
-    curSong: state => state.curSong
+    curSong: state => state.curSong,
+    currentTime: state =>
+      parseInt(state.currentTime / 60) + ':' + (Array(2).join(0) + (state.currentTime % 60)).slice(-2),
+    duration: state =>
+      parseInt(state.duration / 60) + ':' + (Array(2).join(0) + (state.duration % 60)).slice(-2),
   },
 }
