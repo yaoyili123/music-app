@@ -79,6 +79,45 @@ function findLyric(id) {
     return axios.get(url)
 }
 
+function collect(data) {
+    let url = HOST_NAME + '/collect'
+    return axios.post(url, data)
+}
+
+function uncollect(data) {
+    let url = HOST_NAME + '/uncollect'
+    return axios.post(url, data)
+}
+
+function checkCollected(data) {
+    let url = HOST_NAME + '/checkCollected'
+    return axios.get(url, { params: data })
+}
+
+function checkHavedSheet(data) {
+    let url = HOST_NAME + '/checkHavedSheet'
+    return axios.get(url, { params: data })
+}
+
+function checkSong(data) {
+    let url = HOST_NAME + '/checkSong'
+    return axios.get(url, { params: data })
+}
+
+function findCollections(uid, tid) {
+    let url = HOST_NAME
+    switch(tid) {
+        case 1: url += '/album/collections' 
+            break   
+        case 2: url += '/sheet/collections' 
+            break
+        case 3: url += '/artist/collections' 
+            break
+    }
+    
+    return axios.get(url, { params: {uid: uid}})
+}
+
 /* 统一处理API错误 */
 function onError(err) {
     console.log(err);
@@ -105,4 +144,10 @@ export default {
     addSongToSheet,
     deleteSongFromSheet,
     findLyric,
+    collect,
+    uncollect,
+    checkCollected,
+    checkHavedSheet,
+    checkSong,
+    findCollections,
 }

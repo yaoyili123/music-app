@@ -48,6 +48,10 @@ export default {
         .then(function(res) {
           console.log(res)
           let tmp = res.data.data.lyric
+          if (tmp == null) {
+            this.lyric = null
+            return
+          }
           // console.log(tmp)
           this.lyric = tmp
             .split('[')

@@ -37,13 +37,17 @@
         </van-tab>
       </van-tabs>
     </div>
-    <!-- FIXME:放最下面就可以把上面全部遮住 -->
+    <!-- FIXME:放最下面就可以把上面全部遮住，前提是组件外层DIV要加data-detail的class -->
     <transition>
       <router-view v-show="!playPageShow"></router-view>
     </transition>
 
     <transition name="play-slide">
-      <play v-show="playPageShow"></play>
+      <play ref="play" v-show="playPageShow"></play>
+    </transition>
+
+    <transition name="play-slide">
+      <playList v-if="$store.state.PlayService.showPlayList"></playList>
     </transition>
 
     <transition 
@@ -98,7 +102,9 @@ import Search from './components/search'
 import Artist from './components/artist'
 import Play from './components/play'
 import Me from './components/me'
+import PlayList from './components/playList'
 import { mapGetters, mapMutations, mapActions } from 'vuex'
+import Api from 'src/api.js'
 
 export default {
   components : {
@@ -106,6 +112,7 @@ export default {
     Artist,
     Play,
     Me,
+    PlayList,
   },
 
   data() {
@@ -130,12 +137,7 @@ export default {
   },
 
   methods: {
-    ...mapMutations({
-      deleteUser: 'deleteUser',
-      setPlayingState: 'setPlayingState',
-      setCurrentTime: 'setCurrentTime',
-      setDuration: 'setDuration',
-    }),
+    ...mapMutations(['deleteUser', 'setPlayingState', 'setCurrentTime', 'setDuration',]),
 
     userDetail() {
       if (this.isLogined) {
@@ -222,6 +224,23 @@ export default {
           })
         this.setPlayingState(true)
       }, 1000)
+
+      //判断是否已收藏
+      if (this.isLogined) {
+        let params = {
+          songid: this.newVal.id,
+          sheetid: this.curUser.lid,
+        }
+        Api.checkSong(params)
+        .then(function(res){
+          // console.log(res)
+          if (res.data.code != 0) {
+            this.$toast.fail(res.data.msg)
+            return
+          }
+          this.$$refs.play.isCollected = res.data.data
+        }.bind(this)).catch(Api.onError.bind(this))
+        }
     },
 
     playing(newVal) {

@@ -44,13 +44,13 @@
       error-text="加载失败"
       finished-text="没有更多了"
       immediate-check
-  >
+    >
       <van-cell 
       :key="song.id" 
       :title-style="song.mUrl? '': 'color: #D3D3D3'"
       v-for="song in songList" 
       :title="titleType? song.name : song.name + '-' + song.author" 
-      @click="setCurSong(song)"
+      @click="playSong(song)"
       >
         <van-icon
           slot="right-icon"
@@ -71,6 +71,11 @@ import Api from 'src/api.js'
 export default {
   props: {
     titleType: Boolean,
+    /* 
+    1.Album/Artist/Sheet详情页
+    2.播放列表页
+    */
+    listType: Number,
   },
 
   data() {
@@ -90,10 +95,12 @@ export default {
   },
 
   methods: {
-    ...mapMutations({
-      setCurSong: 'setCurSong',
-      setUpdateSheet: 'setUpdateSheet'
-    }),
+    ...mapMutations(['setCurSong','setUpdateSheet','setPlayList',]),
+
+    playSong(curSong) {
+      this.setPlayList(this.songList)
+      this.setCurSong(curSong)
+    },
 
     onSelect(item) {
       if (item.name == '收藏到歌单') {
@@ -178,12 +185,23 @@ export default {
     ...mapGetters(['curUser', 'isLogined', 'updateSheet', 'own']),
 
     actions() {
-      if (this.own) return [
-        { name: '从歌单中删除' }
-      ]
-      else return  [
-        { name: '收藏到歌单' },
-      ]
+      var options = []
+      if (this.listType == 2) {
+        options.push(
+          {name: '从播放列表中删除'},
+        )
+      }
+
+      if (this.listType == 1) {
+        if (this.own) options.push(
+          { name: '从歌单中删除' },
+        )
+        else options.push(
+          { name: '收藏到歌单' },
+        )
+      }
+    
+      return options
     }
   },
 }

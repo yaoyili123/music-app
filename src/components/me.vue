@@ -15,7 +15,11 @@
       >
         <van-field v-model="sheetName" placeholder="请输入歌单标题" />
       </van-dialog>
-
+      
+      <div style="padding-bottom:10px;padding-top:10px">
+        <van-cell icon="user-o" title="我的收藏" is-link @click="$router.push('/collections')"/>
+      </div>
+      
       <van-collapse v-model="activeNames">
         <van-collapse-item title="创建的歌单" name="1">
           <van-list
@@ -31,7 +35,7 @@
               :title="sheet.name"
               :label="sheet.songNum + '首'"
               size="large"
-              @click="setOwn(true); $router.push('/sheet/' + sheet.id)"
+              @click="$router.push('/sheet/' + sheet.id)"
               >
               <template slot="icon">
                 <van-image
@@ -42,6 +46,7 @@
                 />
               </template>
               <van-icon
+                v-show="curUser.lid != sheet.id"
                 slot="right-icon"
                 name="bars"
                 size="1.5em"
@@ -95,10 +100,8 @@ export default {
   },
 
   methods: {
-    ...mapMutations({
-      setUpdateSheet: 'setUpdateSheet',
-      setOwn: 'setOwn',
-    }),
+    ...mapMutations(['setUpdateSheet', 'showPlayList']),
+    
     addSheet: function() {
       if (this.sheetName == '') {
         this.$toast.fail('歌单名不能为空')

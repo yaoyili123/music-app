@@ -22,7 +22,7 @@
       <!-- FIXME: v-if会导致没有加载，从而ref获取不了，因此使用v-show -->
       <van-tabs v-model="active" v-show="isResult">
         <van-tab title="歌曲">
-          <songList ref="song"></songList>
+          <songList :listType=1 ref="song"></songList>
         </van-tab>
 
         <van-tab title="歌手">
@@ -97,7 +97,7 @@
               v-for="sheet in sheetList" 
               :title="sheet.name"
               :label="sheet.username"
-              @click="setOwn(false); $router.push('/sheet/' + sheet.id)"
+              @click=" $router.push('/sheet/' + sheet.id)"
               size="large">
               <template slot="icon">
                 <van-image
@@ -144,10 +144,7 @@ export default {
   },
 
   methods: {
-    ...mapMutations({
-      setOwn: 'setOwn',
-    }),
-
+    
     selectHistory: function(kw) {  
       // console.log(this)
       this.$data.searchKey = kw

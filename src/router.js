@@ -5,15 +5,59 @@ import Album from './components/album'
 import Sheet from './components/sheet'
 import UserForm from './components/userform'
 import UpdateSheet from './components/updateSheet'
+import Collections from './components/collections'
 
 Vue.use(VueRouter)
 
 const routes = [
-  { path: '/artist/:id', name:'artist',  component: Artist },
-  { path: '/sheet/:id', name:'sheet',  component: Sheet },
-  { path: '/album/:id', name:'album',  component: Album },
-  { path: '/userform/:type', name:'userform',  component: UserForm},
-  { path: '/updateSheet/:sid', name:'updateSheet',  component: UpdateSheet},
+  { 
+    path: '/artist/:id', 
+    name:'artist',  
+    component: Artist, 
+    meta: {
+      logined: false 
+    }
+  },
+  { 
+    path: '/sheet/:id', 
+    name:'sheet',  
+    component: Sheet, 
+    meta: {
+      logined: false 
+    }
+  },
+  { 
+    path: '/album/:id', 
+    name:'album',  
+    component: Album, 
+    meta: {
+      logined: false 
+    }
+  },
+  { 
+    path: '/userform/:type', 
+    name:'userform',  
+    component: UserForm, 
+    meta: {
+      logined: false 
+    }
+  },
+  { 
+    path: '/updateSheet/:sid', 
+    name:'updateSheet',  
+    component: UpdateSheet, 
+    meta: {
+      logined: true 
+    }
+  },
+  { 
+    path: '/collections', 
+    name:'collections',  
+    component: Collections, 
+    meta: {
+      logined: true 
+    }
+  },
 ]
 
 export default new VueRouter({

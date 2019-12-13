@@ -110,9 +110,7 @@ export default {
   },
 
   methods: {
-    ...mapMutations({
-      setCurUser: 'setCurUser',
-    }),
+    ...mapMutations(['setCurUser',]),
 
     afterRead: function(param) {
       var file = param.file

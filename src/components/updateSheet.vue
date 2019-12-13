@@ -71,9 +71,7 @@ export default {
   },
 
   methods: {
-    ...mapMutations({
-      setUpdateSheet: 'setUpdateSheet',
-    }),
+    ...mapMutations(['setUpdateSheet',]),
 
     afterRead: function(param) {
       var file = param.file

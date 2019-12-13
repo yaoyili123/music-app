@@ -31,16 +31,25 @@
       </div>
       <div class="music-ctrl">
       <ul>
-        <li><img src="../assets/icon-like.png"></li>
+        <li><img :src="isCollected ? iconLiked : iconLike"
+                 @click="likeSong"
+                 @touchend.prevent="likeSong"
+                 ></li>
         <li><img src="../assets/icon-shangyiqu.png"
+                 @click="playFront"
+                 @touchend.prevent="playFront"
                   ></li>
         <li><img :src="playing? iconPause : iconPlay"
                   @click="$parent.togglePlaying"
                   @touchend="$parent.togglePlaying"></li>
         <li><img src="../assets/icon-xiayiqu.png"
+                 @click="playNext"
+                 @touchend.prevent="playNext"
                 ></li>
         <li><img src="../assets/icon-list.png"
-                  ></li>
+                 @touchend.prevent="showPlayList"
+                 @click="showPlayList"
+                ></li>
       </ul>
     </div>
   </div>
@@ -51,6 +60,7 @@
 <script>
 import { mapGetters, mapMutations, mapActions, mapState } from 'vuex'
 import Lyric from './lyric.vue'
+import Api from 'src/api.js'
 
 export default {
   components: {
@@ -60,23 +70,58 @@ export default {
     return {
       iconPlay: require("../assets/icon-play.png"),
       iconPause: require("../assets/icon-pause.png"),
+      iconLiked: require("../assets/like.png"),
+      iconLike: require("../assets/icon-like.png"),
+      isCollected: false,
     }
   },
 
- 
-
   methods: {
-    ...mapMutations({
-      setPlayingState: 'setPlayingState',
-    }),
+    ...mapMutations(['setPlayingState','showPlayList','playFront', 'playNext']),
 
     hidePlayPage: function () {
       this.$parent.playPageShow = false
     },
 
+    likeSong() {
+      if (!this.isLogined) {
+        this.$toast.fail("您还未登陆")
+        this.$router.push('/userform/login')
+        return
+      }
+
+      var formData = new FormData()
+      formData.append('songId', this.curSong.id)
+      formData.append('sheetId', this.curUser.lid)
+
+      if (this.isCollected) {
+        Api.deleteSongFromSheet(formData)
+          .then(function(res){
+            console.log(res)
+            if (res.data.code != 0) {
+              this.$toast.fail(res.data.msg)
+              return
+            }
+            this.$toast.success(res.data.msg)
+            this.isCollected = false
+          }.bind(this)).catch(Api.onError.bind(this))
+      }
+      else {
+        Api.addSongToSheet(formData)
+          .then(function(res){
+            console.log(res)
+            if (res.data.code != 0) {
+              this.$toast.fail(res.data.msg)
+              return
+            }
+            this.$toast.success(res.data.msg)
+            this.isCollected = true
+          }.bind(this)).catch(Api.onError.bind(this))
+      }
+    },
   },
   computed: {
-     ...mapGetters(['curSong', 'playing', 'currentTime', 'duration']),
+     ...mapGetters(['curSong', 'playing', 'currentTime', 'duration','isLogined', 'curUser']),
      ...mapState({
         indicatorPosition: state => state.PlayService.currentTime / state.PlayService.duration * 100,
       })
