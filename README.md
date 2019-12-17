@@ -1,8 +1,8 @@
 
 ### MUSIC-APP
-渣渣毕设的Web移动端项目，基于vue全家桶和Vant界面库 
-中后台管理系统repo：https://github.com/yaoyili123/music-cms
-服务端repo：https://github.com/yaoyili123/music-server
+渣渣毕设的Web移动端项目，基于vue全家桶和Vant界面库  
+中后台管理系统repo：https://github.com/yaoyili123/music-cms  
+服务端repo：https://github.com/yaoyili123/music-server  
 
 
 ### 完成的功能
