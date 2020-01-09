@@ -6,6 +6,7 @@ import Sheet from './components/sheet'
 import UserForm from './components/userform'
 import UpdateSheet from './components/updateSheet'
 import Collections from './components/collections'
+import UserDetail from './components/userDetail'
 
 Vue.use(VueRouter)
 
@@ -56,6 +57,14 @@ const routes = [
     component: Collections, 
     meta: {
       logined: true 
+    }
+  },
+  { 
+    path: '/userDetail/:uid', 
+    name:'userDetail',  
+    component: UserDetail, 
+    meta: {
+      logined: false 
     }
   },
 ]

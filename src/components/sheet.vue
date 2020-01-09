@@ -13,7 +13,11 @@
       :src="sheet.picUrl"
     />
     </div>
-    <van-cell title="歌曲列表" size="large"/>
+    <van-cell title="歌曲列表" size="large">
+      <router-link :to="'/userDetail/' + sheet.uid" style="color:#1989fa" slot="right-icon">
+        {{sheet.username}}
+      </router-link>
+    </van-cell>
     <songList titleType :listType=1 ref="songs"></songList>
   </div>
 </template>
@@ -93,6 +97,8 @@ export default {
       // console.log(this.$refs)
       this.$refs.songs.songList = res.data.data
       this.$refs.songs.sheetId = this.sheetId
+      this.$refs.songs.belongId = this.sheetId
+      this.$refs.songs.tid = 1
     }.bind(this)).catch(Api.onError.bind(this))
   },
 

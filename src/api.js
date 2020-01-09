@@ -118,6 +118,33 @@ function findCollections(uid, tid) {
     return axios.get(url, { params: {uid: uid}})
 }
 
+function getUserInfo(uid) {
+    let url = HOST_NAME + '/userInfo'
+    return axios.get(url, { params: {uid: uid}})
+}
+
+function getRank(t) {
+    let url = HOST_NAME
+    switch (t) {
+        case 1: url += '/sheet/rank'
+            break
+        case 2: url += '/album/rank'
+            break       
+    }
+    return axios.get(url)
+}
+
+function playSong(t, data) {
+    let url = HOST_NAME
+    switch (t) {
+        case 1: url += '/sheet/play'
+            break
+        case 2: url += '/album/play'
+            break       
+    }
+    return axios.post(url, data)
+}
+
 /* 统一处理API错误 */
 function onError(err) {
     console.log(err);
@@ -150,4 +177,7 @@ export default {
     checkHavedSheet,
     checkSong,
     findCollections,
+    getUserInfo,
+    getRank,
+    playSong,
 }

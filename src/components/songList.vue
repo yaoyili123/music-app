@@ -91,6 +91,8 @@ export default {
       sheetList: [],
       sheetLoading: false,
       sheetFinished: true,
+      belongId: -1,
+      tid: -1,
     }
   },
 
@@ -100,6 +102,19 @@ export default {
     playSong(curSong) {
       this.setPlayList(this.songList)
       this.setCurSong(curSong)
+
+      if (this.belongId != -1 && this.tid != -1) {
+        var formData = new FormData()
+        formData.append('id', this.belongId)
+        Api.playSong(this.tid, formData).then(function (res) {
+          console.log(res);
+          if (res.data.code) {
+            this.$toast.fail(res.data.msg);
+            return
+          }
+        }.bind(this)).catch(Api.onError.bind(this))
+      }
+      
     },
 
     onSelect(item) {

@@ -27,7 +27,7 @@
       </van-nav-bar>
       <van-tabs v-model="active">
         <van-tab title="推荐">
-
+          <recommand></recommand>
         </van-tab>
         <van-tab title="我的">
           <me></me>
@@ -101,6 +101,7 @@
 import Search from './components/search'
 import Artist from './components/artist'
 import Play from './components/play'
+import Recommand from './components/recommand'
 import Me from './components/me'
 import PlayList from './components/playList'
 import { mapGetters, mapMutations, mapActions } from 'vuex'
@@ -113,6 +114,7 @@ export default {
     Play,
     Me,
     PlayList,
+    Recommand,
   },
 
   data() {
@@ -141,12 +143,12 @@ export default {
 
     userDetail() {
       if (this.isLogined) {
-        
+        this.$router.push('/userDetail/' + this.curUser.id)
       }
       else {
         this.$router.push('/userform/login')
-        this.userShow = false
       }
+      this.userShow = false
     },
 
     logOut() {
@@ -306,7 +308,7 @@ body {
   left: 0;
   background-color: white;
   width: 100%;
-  height: 100%;
+  height: 1500px;
   z-index: 1;
 }
 

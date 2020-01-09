@@ -76,6 +76,8 @@ export default {
         return
       }
       this.$refs.songs.songList = res.data.data
+      this.$refs.songs.belongId = this.albumId
+      this.$refs.songs.tid = 2
     }.bind(this)).catch(Api.onError.bind(this))
     
   },

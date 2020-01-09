@@ -20,6 +20,8 @@ export default {
     curSong: defsong,
     //当前播放状态
     playing: false,
+    // //歌曲所属歌单/专辑ID
+    // belongId: -1,
     currentTime: 0,
     duration: 0,
     playList: [defsong],
@@ -48,6 +50,9 @@ export default {
     setCurrentTime(state, data) {
       state.currentTime = data
     },
+    // setBelongId(state, data) {
+    //   state.belongId = data
+    // },
     setDuration(state, data) {
       state.duration = data
     },
@@ -93,6 +98,7 @@ export default {
     duration: state =>
       parseInt(state.duration / 60) + ':' + (Array(2).join(0) + (state.duration % 60)).slice(-2),
     playList: state => state.playList,      
-    showPlayList: state => state.showPlayList,      
+    showPlayList: state => state.showPlayList,  
+    // belongId: state => state.belongId,
   },
 }
